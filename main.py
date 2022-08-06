@@ -1,25 +1,24 @@
-def kmp(word: str) -> list:
-    
-
-def findWord(s: str, word: str):
-    cnt, indexs = 0, []   
-    i = 0
-
-    while i < len(s):
-        j = 0
-        while i+j < len(s) and j < len(word) and s[i+j] == word[j]:
-            j += 1
-        if j == len(word):
-            cnt += 1
-            indexs.append(i+1)
-        i += 1
-
-    return cnt, indexs
-    
-
+# 9935
 s = input()
-word = input()
+bomb = input()
+isbomb = []
+i, result = 0, ''
 
-cnt, indexs = findWord(s, word)
-print(cnt)
-print(*[x for x in indexs])
+for word in s:
+    if word == bomb[0]:
+        i = 1
+        isbomb.append((word, i))
+    elif word == bomb[i]:
+        i += 1
+        isbomb.append((word, i))
+        if i == len(bomb):
+            for _ in range(i):
+                isbomb.pop()
+            i = 0 if isbomb == [] else isbomb[-1][1]
+    elif word != bomb[i] and word in bomb:
+        result += ''.join([w[0] for w in isbomb])
+        isbomb = []
+    else:
+        result += word
+
+print(result if result else "FRULA")
