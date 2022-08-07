@@ -1,19 +1,8 @@
-def trap(height: list) -> int:
-    left, right, h = 0, len(height)-1, 0
-    v = 0
+import re
 
-    while left < right:
-        if height[left] <= h:
-            v += h - height[left]
-            left += 1
-        elif height[right] <= h:
-            v += h - height[right]
-            right -= 1
-        else:
-            h = min(height[left], height[right])
-        print(left, right, h)
-
-    return v
+def func(s: str) -> bool:
+    s = re.sub('->', '', s)
+    return s == s[::-1]
 
 
-print(trap([0,1,0,2,1,0,1,3,2,1,2,1]))
+print(func("1->2->2->1"))
