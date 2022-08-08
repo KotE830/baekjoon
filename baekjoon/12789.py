@@ -1,5 +1,3 @@
-import sys
-
 n = int(input())
 people = list(map(int, input().split()))
 waiting, i = [], 1
