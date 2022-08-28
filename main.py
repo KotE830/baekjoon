@@ -1,30 +1,32 @@
-from collections import defaultdict
-import sys
-input = sys.stdin.readline
+from collections import deque
 
-def worm_virus(graph: dict, v: int) -> dict:
-    def dfs(start_v, path = {}) -> dict:
-        stack = [start_v]
-        
-        while stack:
-            v = stack.pop()
-            if v not in path:
-                path[v] = 1
-                for w in graph[v]:
-                    stack.append(w)
-        return path
-        
+def hide_and_seek(n: int, k: int) -> list:
+    def bfs() -> int:
+        queue = deque([[n, 0, []]])
+        gone = {}        
 
-    return dfs(v)
+        while queue:
+            x, s, ways = queue.popleft()
+            if x < 0 or x > 100000 or x in gone:
+                    continue
 
-n = int(input())
-m = int(input())
-graph = defaultdict(list)
+            ways.append(x)
+                
+            if x == k:
+                return [s, ways]
 
-for _ in range(m):
-    u, v = map(int, input().split())
-    graph[u].append(v)
-    graph[v].append(u)
+            s += 1
+            gone[x] = 1
+            queue.append([x-1, s, ways[:]])
+            if x < k:
+                queue.append([x+1, s, ways[:]])
+                queue.append([x*2, s, ways[:]])
 
-path = worm_virus(graph, 1)
-print(len(path.keys())-1)
+
+    return bfs()
+    
+
+n, k = map(int, input().split())
+s, ways = hide_and_seek(n, k)
+print(s)
+print(*ways)
