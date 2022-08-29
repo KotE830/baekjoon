@@ -2,19 +2,14 @@ from collections import deque
 import sys
 input = sys.stdin.readline
 
-def ripe(m: int, n: int, tomatoes: list) -> int:
+def move_knight(l: int, start_x: int, start_y: int,\
+                target_x: int, target_y: int) -> int:
     def bfs() -> int:
-        max_count = 0
-        for i in range(n):
-            for j in range(m):
-                if not tomatoes[i][j]:
-                    continue
-                    
-                queue = deque([[i, j, 0]])
-                gone = {}
+        queue = deque([[start_x, start_y, 0]])
+        gone = {}        
 
         while queue:
-            x, y, count = queue.popleft()
+            x, y, m = queue.popleft()
             if (x, y) in gone or x < 0 or x >= l or y < 0 or y >= l:
                     continue
                 
@@ -36,6 +31,9 @@ def ripe(m: int, n: int, tomatoes: list) -> int:
     return bfs()
     
 
-m, n = map(int, input().split())
-tomatoes = [list(map(int, input().split())) for _ in range(n)]
-print(ripe(m, n, tomatoes))
+t = int(input())
+for _ in range(t):
+    l = int(input())
+    start_x, start_y = map(int, input().split())
+    x, y = map(int, input().split())
+    print(move_knight(l, start_x, start_y, x, y))
