@@ -1,41 +1,19 @@
-from collections import deque
-import sys
-input = sys.stdin.readline
+import heapq
 
-def ripe(m: int, n: int, tomatoes: list) -> int:
-    def bfs() -> int:
-        max_count = 0
-        for i in range(n):
-            for j in range(m):
-                if not tomatoes[i][j]:
-                    continue
-                    
-                queue = deque([[i, j, 0]])
-                gone = {}
-
-        while queue:
-            x, y, count = queue.popleft()
-            if (x, y) in gone or x < 0 or x >= l or y < 0 or y >= l:
-                    continue
-                
-            if x == target_x and y == target_y:
-                return m
-
-            gone[(x, y)] = 1
-            m += 1
-            queue.append([x+1, y+2, m])
-            queue.append([x+2, y+1, m])
-            queue.append([x+2, y-1, m])
-            queue.append([x+1, y-2, m])
-            queue.append([x-1, y-2, m])
-            queue.append([x-2, y-1, m])
-            queue.append([x-2, y+1, m])
-            queue.append([x-1, y+2, m])
+def bfs(n):
+    queue = [[0, n, [n]]]
+    while queue:
+        count, x, nums = heapq.heappop(queue)
+        if x == 1:
+            return count, nums
+        if x % 3 == 0:
+            heapq.heappush(queue, [count+1, x//3, nums+[x//3]])
+        if x % 2 == 0:
+            heapq.heappush(queue, [count+1, x//2, nums+[x//2]])
+        heapq.heappush(queue, [count+1, x-1, nums+[x-1]])
 
 
-    return bfs()
-    
-
-m, n = map(int, input().split())
-tomatoes = [list(map(int, input().split())) for _ in range(n)]
-print(ripe(m, n, tomatoes))
+n = int(input())
+count, nums = bfs(n)
+print(count)
+print(*nums)
