@@ -1,5 +1,7 @@
 from collections import defaultdict
 import heapq
+import sys
+input = sys.stdin.readline
 
 def shortest_path(V: int, E: int, K: int, graph: defaultdict) -> defaultdict:
     routes = defaultdict(int)
@@ -7,13 +9,13 @@ def shortest_path(V: int, E: int, K: int, graph: defaultdict) -> defaultdict:
 
     while queue:
         weight, node = heapq.heappop(queue)
+        if node in routes:
+            continue
             
         routes[node] = weight
 
         for v, w in graph[node]:
-            alt = weight + w
-            if alt < routes[v]:
-                heapq.heappush(queue, (weight+w, v))
+            heapq.heappush(queue, (weight+w, v))
 
     return routes
     
