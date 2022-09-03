@@ -1,30 +1,25 @@
-from collections import defaultdict
-import heapq
+import sys
+input = sys.stdin.readline
 
-def shortest_path(V: int, E: int, K: int, graph: defaultdict) -> defaultdict:
-    routes = defaultdict(int)
-    queue = [(0, K)]
+def twoSum(n: int, waters: list) -> tuple:
+    left, right = 0, n-1
+    result = (abs(waters[0] + waters[n-1]), waters[0], waters[n-1])
 
-    while queue:
-        weight, node = heapq.heappop(queue)
-            
-        routes[node] = weight
+    while left != right:
+        value = abs(waters[left] + waters[right])
+        if value < abs(result[0]):
+            result = (value, waters[left], waters[right])
 
-        for v, w in graph[node]:
-            alt = weight + w
-            if alt < routes[v]:
-                heapq.heappush(queue, (weight+w, v))
+        if value < 0:
+            left += 1
+        elif value > 0:
+            right -= 1
+        else:
+            return (waters[left], waters[right])
 
-    return routes
+    return (result[1:])
+
     
-
-V, E = map(int, input().split())
-K = int(input())
-graph = defaultdict(list)
-for _ in range(E):
-    u, v, w = map(int, input().split())
-    graph[u].append((v, w))
-
-routes = shortest_path(V, E, K, graph)
-for i in range(1, V+1):
-    print(routes[i] if i in routes else 'INF')
+n = int(input())
+waters = list(map(int, input().split()))
+print(*twoSum(n, waters))

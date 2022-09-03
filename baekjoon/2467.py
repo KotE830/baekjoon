@@ -1,4 +1,4 @@
-# equal to 2467
+# equal to 2470
 
 def twoSum(n: int, arr: list) -> tuple:
     left, right = 0, n-1
