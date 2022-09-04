@@ -1,38 +1,32 @@
-from collections import deque
-import heapq
-import sys
-input = sys.stdin.readline
+# 9663 N-Queen
 
-def shortest_path(N: int, M: int, graph: list) -> int:
-    queue = deque([(1, 0, 0, 0)])
-    visited = [[[0, 0] * M] * N]
-    dx, dy = [1, -1, 0, 0], [0, 0, 1, -1]
+def n_queen(n: int) -> int:
+    chessboard = [[0 for _ in range(n)] for _ in range(n)]
+    
+    def dfs(new_y: int) -> int:
+        if new_y == n:
+            return 1
 
-    while queue:
-        count, broke, x, y = queue.popleft()
-
-        if x == M-1 and y == N-1:
-            return count
-
-        count += 1
-        for i in range(4):
-            nx, ny = x + dx[i], y + dy[i]
-            if nx < 0 or nx >= M or ny < 0 or ny >= N:
+        count = 0
+        for new_x in range(n):
+            if chessboard[new_y][new_x]:
                 continue
 
-                visit을 새로운 2차원배열을 생성한다음에 초기값을 큰값으로 초기화. 그다음 visit값은 0(벽안부시고 도달한경우), 1(벽부시고 도달한경우), 큰값(도달 한적없는경우)로 나누어집니다.
-                
-            if graph[ny][nx] == '0':
-                queue.append((count, broke, nx, ny))
-            elif broke == 0:
-                queue.append((count, 1, nx, ny))
-        for g in graph:
-            print(*g)
-        print(x, y)
+            k1, k2 = new_y - new_x, new_y + new_x
+            for y in range(new_y + 1, n):
+                chessboard[y][new_x] = 0
+                if y-k1 >= 0 and y-k1 < n:
+                    chessboard[y][y-k1] = 0
+                if k2-y >= 0 and k2-y < n:
+                    chessboard[y][k2-y] = 0
+
+            count += dfs(new_y + 1)
+            
+        return count
+        
+
+    return dfs(0)
     
-    return -1
 
-
-N, M = map(int, input().split())
-graph = [list(input().rstrip()) for _ in range(N)]
-print(shortest_path(N, M, graph))
+n = int(input())
+print(n_queen(n))
