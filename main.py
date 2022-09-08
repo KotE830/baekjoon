@@ -1,32 +1,35 @@
-# 9663 N-Queen
+import sys
+sys.setrecursionlimit(10**5)
+input = sys.stdin.readline
 
-def n_queen(n: int) -> int:
-    chessboard = [[0 for _ in range(n)] for _ in range(n)]
-    
-    def dfs(new_y: int) -> int:
-        if new_y == n:
-            return 1
+class TreeNode:
+    def __init__(self, val):
+        self.val = val
+        self.left = None
+        self.right = None
 
-        count = 0
-        for new_x in range(n):
-            if chessboard[new_y][new_x]:
-                continue
-
-            k1, k2 = new_y - new_x, new_y + new_x
-            for y in range(new_y + 1, n):
-                chessboard[y][new_x] = 0
-                if y-k1 >= 0 and y-k1 < n:
-                    chessboard[y][y-k1] = 0
-                if k2-y >= 0 and k2-y < n:
-                    chessboard[y][k2-y] = 0
-
-            count += dfs(new_y + 1)
+def print_preorder(postorder: list, inorder: list):
+    result = []
+    def preorder(postorder: list, inorder: list):
+        if inorder:
+            index = inorder.index(postorder.pop())
             
-        return count
-        
+            preorder(postorder, inorder[index+1:])
+            preorder(postorder, inorder[:index])
+            result.append(inorder[index])
+            
 
-    return dfs(0)
     
-
+    preorder(postorder, inorder)
+    print(*result[::-1])
+    
+'''
 n = int(input())
-print(n_queen(n))
+inorder = list(map(int, input().split()))
+postorder = list(map(int, input().split()))
+
+print_preorder(postorder, inorder)
+'''
+#print_preorder(['A','C','B','F','E','D','H','J','L','K','I','G'],['A','B','C','D','E','F','G','H','I','J','K','L'])
+
+print_preorder([1, 2, 3, 4], [4, 3,2, 1])
