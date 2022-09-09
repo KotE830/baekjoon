@@ -1,35 +1,31 @@
+# 10026
 import sys
-sys.setrecursionlimit(10**5)
+sys.setrecursionlimit(10**6)
 input = sys.stdin.readline
 
-class TreeNode:
-    def __init__(self, val):
-        self.val = val
-        self.left = None
-        self.right = None
+def count_areas(N: int, grid: list) -> int:
+    def dfs(x: int, y: int, mark: str):
+        dx, dy = [1, -1, 0, 0], [0, 0, 1, -1]
+        
+        grid[y][x] = mark
+        for i in range(4):
+            nx, ny, = x + dx[i], y + dy[i]
+            if nx >= 0 and nx < N and ny >= 0 and ny < N and grid[ny][nx] == 1:
+                dfs(nx, ny)
+        
 
-def print_preorder(postorder: list, inorder: list):
-    result = []
-    def preorder(postorder: list, inorder: list):
-        if inorder:
-            index = inorder.index(postorder.pop())
-            
-            preorder(postorder, inorder[index+1:])
-            preorder(postorder, inorder[:index])
-            result.append(inorder[index])
-            
-
+    count_r, count_g = 0
+    for y in range(N):
+        for x in range(N):
+            if grid[y][x] == 1:
+                dfs(x, y, 'R', 'G')
+                count_r += 1
+                dfs(x, y, 'G', 'B')
+                count_g += 1
+    return (count_r, count_g)
     
-    preorder(postorder, inorder)
-    print(*result[::-1])
-    
-'''
-n = int(input())
-inorder = list(map(int, input().split()))
-postorder = list(map(int, input().split()))
 
-print_preorder(postorder, inorder)
-'''
-#print_preorder(['A','C','B','F','E','D','H','J','L','K','I','G'],['A','B','C','D','E','F','G','H','I','J','K','L'])
 
-print_preorder([1, 2, 3, 4], [4, 3,2, 1])
+N = int(input())
+grid = [list(map(int, input().split())) for _ in range(h)]
+print(*count_areas(N, grid))
