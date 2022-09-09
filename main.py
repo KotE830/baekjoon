@@ -1,31 +1,27 @@
-# 10026
 import sys
 sys.setrecursionlimit(10**6)
 input = sys.stdin.readline
 
-def count_areas(N: int, grid: list) -> int:
-    def dfs(x: int, y: int, mark: str):
-        dx, dy = [1, -1, 0, 0], [0, 0, 1, -1]
-        
-        grid[y][x] = mark
-        for i in range(4):
-            nx, ny, = x + dx[i], y + dy[i]
-            if nx >= 0 and nx < N and ny >= 0 and ny < N and grid[ny][nx] == 1:
-                dfs(nx, ny)
-        
-
-    count_r, count_g = 0
-    for y in range(N):
-        for x in range(N):
-            if grid[y][x] == 1:
-                dfs(x, y, 'R', 'G')
-                count_r += 1
-                dfs(x, y, 'G', 'B')
-                count_g += 1
-    return (count_r, count_g)
+def move_piece(R: int, C: int, grid: list) -> int:
+    dx, dy = [1, -1, 0, 0], [0, 0, 1, -1]
     
+    def dfs(x: int, y: int, count: int) -> int:
+        visited[ord(grid[y][x]) - 65] = True
+        new_count = 0
+        
+        for i in range(4):
+            nx, ny = x + dx[i], y + dy[i]
+            if nx >= 0 and ny >= 0 and nx < C and ny < R and not visited[ord(grid[ny][nx]) - 65]:
+                new_count = max(new_count, dfs(nx, ny, count+1))
+                visited[ord(grid[ny][nx]) - 65] = False
 
+        return max(count, new_count)
+        
 
-N = int(input())
-grid = [list(map(int, input().split())) for _ in range(h)]
-print(*count_areas(N, grid))
+    visited = [False for _ in range(26)]
+    return dfs(0, 0, 1)
+            
+
+R, C = map(int, input().split())
+grid = [list(input().rstrip()) for _ in range(R)]
+print(move_piece(R, C, grid))
