@@ -1,30 +1,31 @@
-import collections, heapq, sys
+import collections, sys
 input = sys.stdin.readline
 
-def solve_problems(N: int, count: list, graph: collections.defaultdict):
-    heap, result = [], []
-
+def solve_problems(N: int, count: list, graph: collections.defaultdict) -> list:
+    queue = collections.deque([])
+    result = []
     for i in range(1, N+1):
         if count[i] == 0:
-            heapq.heappush(heap, i)
-
-    while heap:
-        u = heapq.heappop(heap)
+            queue.append(i)
+            
+    while queue:
+        u = queue.popleft()
         for v in graph[u]:
             count[v] -= 1
             if count[v] == 0:
-                heapq.heappush(heap, v)
+                queue.append(v)
         result.append(u)
-
-    print(*result)
+        
+    return result
 
 
 N, M = map(int, input().split())
 count = [0 for _ in range(N+1)]
 graph = collections.defaultdict(list)
+
 for _ in range(M):
     A, B = map(int, input().split())
     graph[A].append(B)
     count[B] += 1
     
-solve_problems(N, count, graph)
+print(*solve_problems(N, count, graph))
